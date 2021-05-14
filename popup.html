@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Webcam health supporter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h2>ON/OFF Webcam health supporter</h2>
+<div class="toggleWrapper">
+    <input type="checkbox" name="toggle1" class="mobileToggle" id="toggle">
+    <label for="toggle"></label>
+</div>
+<script>
+    const toggle = document.querySelector('#toggle')
+    toggle.onclick = () => {
+    Notification.requestPermission(function(permission){
+        console.log('Результат запроса прав:', permission)
+    })
+    const socket = new WebSocket('ws://localhost:8888/events')
+    socket.addEventListener('message', (event) => {
+        const {type, message} = JSON.parse(event.data)
+        const notification = new Notification(type, {body: message, icon: 'icon.png'})
+    })
+}
+</script>
+</body>
+</html>
